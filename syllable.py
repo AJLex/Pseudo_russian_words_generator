@@ -1,7 +1,11 @@
-def write_syllables(letter_number, current_letter, word, word_by_syllable):
+def write_syllables(letter_number, current_letter, word, word_by_syllable, second_condition=False):
     syllable = ''
-    for letter in range(current_letter, letter_number + 1):
-        syllable = syllable + word_list[letter]
+    if second_condition == False:
+        for letter in range(current_letter, letter_number + 1):
+            syllable = syllable + word_list[letter]
+    else:
+        for letter in range(current_letter, letter_number + 2):
+            syllable = syllable + word_list[letter]
     word= word + syllable
     current_letter = len(word)
     word_by_syllable.append(syllable)
@@ -27,6 +31,15 @@ if __name__ == '__main__':
             current_letter, word, word_by_syllable = write_syllables(letter_number,
                                                                      current_letter,
                                                                      word,
-                                                                     word_by_syllable)        
+                                                                     word_by_syllable)
 
+        elif word_list[letter_number] in vowel and word_list[letter_number + 1] \
+             not in vowel and word_list[letter_number + 2] not in vowel:
+            current_letter, word, word_by_syllable = write_syllables(letter_number,
+                                                                     current_letter,
+                                                                     word,
+                                                                     word_by_syllable,
+                                                                     second_condition=True) # first condition: v|v or v|cv, second condition: vc|c...cv
+                                                                                            # where v - vowel, c - consonant
+            
     print(word_by_syllable)
