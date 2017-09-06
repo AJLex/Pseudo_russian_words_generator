@@ -1,1 +1,1 @@
-"word by syllable app" 
+Word by syllable app
