@@ -15,12 +15,17 @@ where v - vowel, c - consonant
 def obtaining_syllable(current_letter_number, letter_number,
                        word_by_letters, third_condition=False):
     syllable = ''
+    sign = ['ь', 'ъ']
     if third_condition == False:
         for letter_number_temp in range(current_letter_number, letter_number + 1):
             syllable += word_by_letters[letter_number_temp]
+        if word_by_letters[letter_number + 1] in sign:
+                syllable += word_by_letters[letter_number + 1]
     else:
         for letter_number_temp in range(current_letter_number, letter_number + 2):
             syllable += word_by_letters[letter_number_temp]
+        if word_by_letters[letter_number + 2] in sign:
+                syllable += word_by_letters[letter_number + 2]
     return syllable
 
 
@@ -92,4 +97,3 @@ def obtain_syllable_parameters(word_by_syllable):
 
 
 if __name__ == '__main__':
-    print(obtain_syllable_parameters(get_word_by_syllable('а')))
