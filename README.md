@@ -1,1 +1,1 @@
-Word by syllable app
+pseudo-russian words generator
