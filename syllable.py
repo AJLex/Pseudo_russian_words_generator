@@ -114,7 +114,9 @@ def write_index_table(file_write, file_read='freqrnc2011.csv', ):
     count = Counter(syllable_list)
     with open(file_write, 'w', encoding='utf-8') as f:
         for key in count:
-            f.write(str(key).strip('(').strip(')') + ', ' + str(count[key]) + '\n')
+            temp = list(key)
+            temp.append(count[key])
+            f.write(str(temp) + '\n')
 
 
 if __name__ == '__main__':
