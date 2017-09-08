@@ -88,7 +88,7 @@ def obtain_syllable_parameters(word_by_syllable_temp):
     if word_by_syllable_temp:
         for syllable in word_by_syllable_temp:
             previous_syllable = word_by_syllable_temp[word_by_syllable_temp.index(syllable) - 1] \
-            if word_by_syllable_temp.index(syllable) > 0 else ['BEG']
+            if word_by_syllable_temp.index(syllable) > 0 else 'BEG'
             syllable_param.append((syllable, previous_syllable,
                                    word_by_syllable_temp.index(syllable),
                                    len(word_by_syllable_temp)))
@@ -96,9 +96,9 @@ def obtain_syllable_parameters(word_by_syllable_temp):
         return syllable_param
 
 
-def write_syllable_parametrs(file_read='freqrnc2011.csv', file_write='temp.txt'):
+def write_index_table(file_write, file_read='freqrnc2011.csv', ):
     with open(file_read, 'r', encoding='utf-8') as f:
-        sylllable_list = []
+        syllable_list = []
         fields = ['word', 'PoS', 'Freq', 'R', 'D', 'Doc']
         reader = csv.DictReader(f, fields, delimiter='	')
         for row in reader:
@@ -108,27 +108,14 @@ def write_syllable_parametrs(file_read='freqrnc2011.csv', file_write='temp.txt')
                     word_by_syllable = get_word_by_syllable(row.get('word'), [])
                     syllable_param = obtain_syllable_parameters(word_by_syllable)
                     if syllable_param:
-                        for element in syllable_param:
-                            sylllable_list += element
-                            print(sylllable_list)
-                    # print(syllable_param)
+                        syllable_list += syllable_param
             except IndexError:
                 print('Нет гласных')
+    count = Counter(syllable_list)
     with open(file_write, 'w', encoding='utf-8') as f:
-        for element in sylllable_list:
-            f.write(str(element) + '\n')
-
-
-# def obtain_index_of_syllable_param(file_read)
-    # counted_syllable_param = Counter(sylllable_list)
-    # with open(filewrite, 'w', encoding='utf-8') as f:
-    #     fields = ['syllable_param', 'Freq']
-    #     writer = csv.DictWriter(f, fields, delimiter=';')
-    #     writer.writeheader()
-    #     for element in counted_syllable_param.keys():
-    #         print('element ', element)
-    #         writer.writerow(element, counted_syllable_param[element])
+        for key in count:
+            f.write(str(key).strip('(').strip(')') + ', ' + str(count[key]) + '\n')
 
 
 if __name__ == '__main__':
-    write_syllable_parametrs()
+    write_index_table('index_table.txt')
