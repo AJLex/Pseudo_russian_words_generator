@@ -138,29 +138,30 @@ def read_from_file_index_table(file_read):
 
 
 def pseudo_word_generator(counted_index_table=get_index_table()):
+    print('Вас приветствует генератор псевдо русских слов!')
     while True:
         pseudo_word = ''
         number_of_syllables = input('Введите число слогов в слове или exit для выхода.\n> ')
         if number_of_syllables =='exit':
             break
-        top_percent = float(input('Ведите число для отбора первых U% слогов. (Например: 20).\n> '))*0.01
-        previous_syllable = 'BEG'
-        for syllable_index in range(0, int(number_of_syllables)):
-            syllable_list = []
-            for element in counted_index_table:
-                if element[1] == previous_syllable and element[2] == syllable_index \
-                   and element[3] == int(number_of_syllables):
-                    syllable_list.append(element)
-            syllable_list.sort(key=lambda syllable_temp: syllable_temp[-1], reverse=True)
-            top_syllables = syllable_list[:int(len(syllable_list)*top_percent)]
-            syllable = ''
-            try:
+        try:
+            top_percent = float(input('Ведите число для отбора первых U% слогов. (Например: 20).\n> '))*0.01
+            previous_syllable = 'BEG'
+            for syllable_index in range(0, int(number_of_syllables)):
+                syllable_list = []
+                for element in counted_index_table:
+                    if element[1] == previous_syllable and element[2] == syllable_index \
+                       and element[3] == int(number_of_syllables):
+                        syllable_list.append(element)
+                syllable_list.sort(key=lambda syllable_temp: syllable_temp[-1], reverse=True)
+                top_syllables = syllable_list[:int(len(syllable_list)*top_percent)]
+                syllable = ''
                 selected_syllable = top_syllables[random.randint(0, len(top_syllables) - 1)]
                 syllable = selected_syllable[0]
                 pseudo_word += syllable
                 previous_syllable = syllable
-            except ValueError:
-                print('Попробуте ещё раз, увеличев число для отбора первых слогов.')
+        except ValueError:
+            print('Попробуте ещё раз. Можно уменьшить число слогов или увеличить число для отбора первых слогов.')
         print(pseudo_word)
 
 
@@ -169,5 +170,5 @@ if __name__ == '__main__':
     For running app needs to download dictionary from link http://dict.ruslang.ru/Freq2011.zip
     and put it into folder with this program.
     """
-    
+
     pseudo_word_generator()
