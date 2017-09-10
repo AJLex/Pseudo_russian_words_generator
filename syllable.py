@@ -103,6 +103,7 @@ def get_index_table(file_read='freqrnc2011.csv', ):
         syllable_list = []
         fields = ['word', 'PoS', 'Freq', 'R', 'D', 'Doc']
         reader = csv.DictReader(f, fields, delimiter='	')
+        print('loading...')
         for row in reader:
             try:
                 syllable_param = []
@@ -122,7 +123,7 @@ def get_index_table(file_read='freqrnc2011.csv', ):
     return counted_idex_table
 
 
-def write_to_file_index_table(count, file_write):
+def write_index_table_to_file(count, file_write):
     with open(file_write, 'w', encoding='utf-8') as f:
         for key in count:
             temp = list(key)
@@ -130,15 +131,16 @@ def write_to_file_index_table(count, file_write):
             f.write(str(temp).strip('[').strip(']') + '\n')
 
 
-def read_from_file_index_table(file_read):
+def reade_index_table_from_fil(file_read):
     syllable_list = []
     with open(file_read, 'r', encoding='utf-8') as f:
         for line in f:
-            print(f.readline())
+            syllable_list.append(f.readline)
+    return syllable_list
 
 
 def pseudo_word_generator(counted_index_table=get_index_table()):
-    print('Вас приветствует генератор псевдо русских слов!')
+    print('\nВас приветствует генератор псевдо русских слов!')
     while True:
         pseudo_word = ''
         number_of_syllables = input('Введите число слогов в слове или exit для выхода.\n> ')
