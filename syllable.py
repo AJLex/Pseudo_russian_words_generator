@@ -169,4 +169,5 @@ if __name__ == '__main__':
     For running app needs to download dictionary from link http://dict.ruslang.ru/Freq2011.zip
     and put it into folder with this program.
     """
+    
     pseudo_word_generator()
