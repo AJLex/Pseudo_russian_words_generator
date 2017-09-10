@@ -1,5 +1,7 @@
+import random
 import csv
 from collections import Counter
+
 
 '''
 letter_number - current letter in cicle "for"
@@ -96,7 +98,7 @@ def obtain_syllable_parameters(word_by_syllable_temp):
         return syllable_param
 
 
-def write_index_table(file_write, file_read='freqrnc2011.csv', ):
+def get_index_table(file_read='freqrnc2011.csv', ):
     with open(file_read, 'r', encoding='utf-8') as f:
         syllable_list = []
         fields = ['word', 'PoS', 'Freq', 'R', 'D', 'Doc']
@@ -110,14 +112,61 @@ def write_index_table(file_write, file_read='freqrnc2011.csv', ):
                     if syllable_param:
                         syllable_list += syllable_param
             except IndexError:
-                print('Нет гласных')
-    count = Counter(syllable_list)
+                i = 0
+    raw_index_table = Counter(syllable_list)
+    counted_idex_table = []
+    for key in raw_index_table:
+        temp = list(key)
+        temp.append(raw_index_table[key])
+        counted_idex_table.append(temp)
+    return counted_idex_table
+
+
+def write_to_file_index_table(count, file_write):
     with open(file_write, 'w', encoding='utf-8') as f:
         for key in count:
             temp = list(key)
             temp.append(count[key])
-            f.write(str(temp) + '\n')
+            f.write(str(temp).strip('[').strip(']') + '\n')
+
+
+def read_from_file_index_table(file_read):
+    syllable_list = []
+    with open(file_read, 'r', encoding='utf-8') as f:
+        for line in f:
+            print(f.readline())
+
+
+def pseudo_word_generator(counted_index_table=get_index_table()):
+    while True:
+        pseudo_word = ''
+        number_of_syllables = input('Введите число слогов в слове или exit для выхода.\n> ')
+        if number_of_syllables =='exit':
+            break
+        top_percent = float(input('Ведите число для отбора первых U% слогов. (Например: 20).\n> '))*0.01
+        previous_syllable = 'BEG'
+        for syllable_index in range(0, int(number_of_syllables)):
+            syllable_list = []
+            for element in counted_index_table:
+                if element[1] == previous_syllable and element[2] == syllable_index \
+                   and element[3] == int(number_of_syllables):
+                    syllable_list.append(element)
+            syllable_list.sort(key=lambda syllable_temp: syllable_temp[-1], reverse=True)
+            top_syllables = syllable_list[:int(len(syllable_list)*top_percent)]
+            syllable = ''
+            try:
+                selected_syllable = top_syllables[random.randint(0, len(top_syllables) - 1)]
+                syllable = selected_syllable[0]
+                pseudo_word += syllable
+                previous_syllable = syllable
+            except ValueError:
+                print('Попробуте ещё раз, увеличев число для отбора первых слогов.')
+        print(pseudo_word)
 
 
 if __name__ == '__main__':
-    write_index_table('index_table.txt')
+    """
+    For running app needs to download dictionary from link http://dict.ruslang.ru/Freq2011.zip
+    and put it into folder with this program.
+    """
+    pseudo_word_generator()
