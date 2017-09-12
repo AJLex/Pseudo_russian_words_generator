@@ -4,88 +4,95 @@ from collections import Counter
 
 
 '''
-letter_number - current letter in cicle "for"
-current_letter_number - len of variable "word"
-word - sum of syllables
-word_by_syllable_temp - list of syllables
-word_by_letters - incoming word divided by letters
-syllable_params - list, include:
-                               [0] - current syllable
-                               [1] - previous_syllable
-                               [2] - index of current syllable in word
-                               [3] - number of syllables in word
-                               [4] - how often this set of parameters
-                                     of syllable is postponed
-counted_idex_table - table include syllable_params with [4] element
+basic variables:
+    current_letter_number - current letter in cicle "for"
+                            inside function get_word_by_syllable
+    letter_number - len of variable "word"
+    word - sum of syllables
+    word_by_syllable_temp - list of syllables
+    word_by_letters - incoming word divided by letters
+    syllable_params - list, include:
+                                   [0] - current syllable
+                                   [1] - previous_syllable
+                                   [2] - index of current syllable in word
+                                   [3] - number of syllables in word
+                                   [4] - how often this set of parameters
+                                         of syllable is postponed
+    counted_idex_table - table include syllable_params[4] element
 word by syllable conditions:
                             first condition: v|v,
                             second condition: v|cv,
                             third condition: vc|c...cv,
                             where v - vowel, c - consonant
 '''
-def obtain_syllable(current_letter_number, letter_number,
+
+
+'''
+function takes letter_number and current_letter_number
+'''
+def obtain_syllable(letter_number, current_letter_number,
                     word_by_letters, third_condition=False):
     syllable = ''
     sign = ['ь', 'ъ']
     if third_condition == False:
-        for letter_number_temp in range(current_letter_number, letter_number + 1):
-            syllable += word_by_letters[letter_number_temp]
-        if word_by_letters[letter_number + 1] in sign:
-                syllable += word_by_letters[letter_number + 1]
+        for current_letter_number_temp in range(letter_number, current_letter_number + 1):
+            syllable += word_by_letters[current_letter_number_temp]
+        if word_by_letters[current_letter_number + 1] in sign:
+                syllable += word_by_letters[current_letter_number + 1]
     else:
-        for letter_number_temp in range(current_letter_number, letter_number + 2):
-            syllable += word_by_letters[letter_number_temp]
-        if word_by_letters[letter_number + 2] in sign:
-                syllable += word_by_letters[letter_number + 2]
+        for current_letter_number_temp in range(letter_number, current_letter_number + 2):
+            syllable += word_by_letters[current_letter_number_temp]
+        if word_by_letters[current_letter_number + 2] in sign:
+                syllable += word_by_letters[current_letter_number + 2]
     return syllable
 
 
-def record_of_syllable(current_letter_number, letter_number, word_by_letters,
+def record_of_syllable(letter_number, current_letter_number, word_by_letters,
                        word, word_by_syllable_temp, third_condition=False):
-    syllable = obtain_syllable(current_letter_number, letter_number,
+    syllable = obtain_syllable(letter_number, current_letter_number,
                                word_by_letters, third_condition)
     word += syllable
-    current_letter_number = len(word)
+    letter_number = len(word)
     word_by_syllable_temp.append(syllable)
-    return current_letter_number, letter_number, word_by_syllable_temp, word
+    return letter_number, current_letter_number, word_by_syllable_temp, word
 
 
-def last_letters_handler(current_letter_number, word_by_letters,
+def last_letters_handler(letter_number, word_by_letters,
                          word_by_syllable_temp, vowel):
-    for letter_number in range(current_letter_number, len(word_by_letters) -2):
+    for current_letter_number in range(letter_number, len(word_by_letters) -2):
         if word_by_letters[-3] not in vowel:
-            word_by_syllable_temp[-1] += word_by_letters[letter_number]
+            word_by_syllable_temp[-1] += word_by_letters[current_letter_number]
     return word_by_syllable_temp
 
 
 def get_word_by_syllable(word_incoming,word_by_syllable_temp=[],
-                         current_letter_number=0, word=''):
+                         letter_number=0, word=''):
     word_by_letters = list(word_incoming) + ['а', 'б']
     if '-' in word_by_letters:
         return None
     else:
         vowel = ['а', 'у', 'о', 'ы', 'и', 'э', 'я', 'ю', 'ё', 'е']
-        for letter_number in range(0, len(word_by_letters) - 2):
-            if word_by_letters[letter_number] in vowel and \
-               word_by_letters[letter_number + 1] in vowel:
-                current_letter_number, letter_number , word_by_syllable_temp, word = \
-                record_of_syllable(current_letter_number, letter_number, word_by_letters,
+        for current_letter_number in range(0, len(word_by_letters) - 2):
+            if word_by_letters[current_letter_number] in vowel and \
+               word_by_letters[current_letter_number + 1] in vowel:
+                letter_number, current_letter_number , word_by_syllable_temp, word = \
+                record_of_syllable(letter_number, current_letter_number, word_by_letters,
                                       word, word_by_syllable_temp)
 
-            elif  word_by_letters[letter_number] in vowel and \
-                  word_by_letters[letter_number + 1] not in vowel and \
-                  word_by_letters[letter_number + 2] in vowel:
-                current_letter_number, letter_number , word_by_syllable_temp, word = \
-                record_of_syllable(current_letter_number, letter_number, word_by_letters,
+            elif  word_by_letters[current_letter_number] in vowel and \
+                  word_by_letters[current_letter_number + 1] not in vowel and \
+                  word_by_letters[current_letter_number + 2] in vowel:
+                letter_number, current_letter_number , word_by_syllable_temp, word = \
+                record_of_syllable(letter_number, current_letter_number, word_by_letters,
                                       word, word_by_syllable_temp)
 
-            elif word_by_letters[letter_number] in vowel and \
-                 word_by_letters[letter_number + 1] not in vowel and \
-                 word_by_letters[letter_number + 2] not in vowel:
-                current_letter_number, letter_number , word_by_syllable_temp, word = \
-                record_of_syllable(current_letter_number, letter_number, word_by_letters,
+            elif word_by_letters[current_letter_number] in vowel and \
+                 word_by_letters[current_letter_number + 1] not in vowel and \
+                 word_by_letters[current_letter_number + 2] not in vowel:
+                letter_number, current_letter_number , word_by_syllable_temp, word = \
+                record_of_syllable(letter_number, current_letter_number, word_by_letters,
                                       word, word_by_syllable_temp, third_condition=True)
-        word_by_syllable_temp = last_letters_handler(current_letter_number, word_by_letters,
+        word_by_syllable_temp = last_letters_handler(letter_number, word_by_letters,
                                                      word_by_syllable_temp, vowel)
         return word_by_syllable_temp
 
@@ -163,8 +170,7 @@ def pseudo_word_generator(counted_index_table=get_index_table()):
                 syllable_list.sort(key=lambda syllable_temp: syllable_temp[-1], reverse=True)
                 top_syllables = syllable_list[:int(len(syllable_list)*top_percent)]
                 syllable = ''
-                selected_syllable = top_syllables[random.randint(0, len(top_syllables) - 1)]
-                print(selected_syllable)
+                selected_syllable = top_syllables[random.randint(0, len(top_syllables) - 1)]                
                 syllable = selected_syllable[0]
                 pseudo_word += syllable
                 previous_syllable = syllable
