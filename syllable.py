@@ -50,8 +50,7 @@ def record_of_syllable(current_letter_number, letter_number, word_by_letters,
 
 
 def last_letters_handler(current_letter_number, word_by_letters,
-                         word_by_syllable_temp, vowel):
-    sign = ['ь', 'ъ']
+                         word_by_syllable_temp, vowel):    
     for letter_number in range(current_letter_number, len(word_by_letters) -2):
         if word_by_letters[-3] not in vowel:
             word_by_syllable_temp[-1] += word_by_letters[letter_number]
