@@ -7,15 +7,16 @@ from collections import Counter
 letter_number - current letter in cicle "for"
 current_letter_number - len of variable "word"
 word - sum of syllables
-word_by_syllable_temp - list of syllable
+word_by_syllable_temp - list of syllables
 word_by_letters - incoming word divided by letters
 syllable_params - list, include:
                                [0] - current syllable
                                [1] - previous_syllable
                                [2] - index of current syllable in word
                                [3] - number of syllables in word
-                               [4] - (after Counter) number of word repetitions
-
+                               [4] - how often this set of parameters
+                                     of syllable is postponed
+counted_idex_table - table include syllable_params with [4] element
 word by syllable conditions:
                             first condition: v|v,
                             second condition: v|cv,
@@ -23,7 +24,7 @@ word by syllable conditions:
                             where v - vowel, c - consonant
 '''
 def obtain_syllable(current_letter_number, letter_number,
-                       word_by_letters, third_condition=False):
+                    word_by_letters, third_condition=False):
     syllable = ''
     sign = ['ь', 'ъ']
     if third_condition == False:
@@ -50,7 +51,7 @@ def record_of_syllable(current_letter_number, letter_number, word_by_letters,
 
 
 def last_letters_handler(current_letter_number, word_by_letters,
-                         word_by_syllable_temp, vowel):    
+                         word_by_syllable_temp, vowel):
     for letter_number in range(current_letter_number, len(word_by_letters) -2):
         if word_by_letters[-3] not in vowel:
             word_by_syllable_temp[-1] += word_by_letters[letter_number]
@@ -167,7 +168,7 @@ def pseudo_word_generator(counted_index_table=get_index_table()):
                 syllable = selected_syllable[0]
                 pseudo_word += syllable
                 previous_syllable = syllable
-        except ValueError:
+        except ValueError: #exceptions occurs when len(top_syllables) == 1
             print('Попробуте ещё раз. Можно уменьшить число слогов или увеличить число для отбора первых слогов.')
         print(pseudo_word)
 

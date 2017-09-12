@@ -6,7 +6,7 @@ from syllable import obtain_syllable, get_word_by_syllable,\
 
 
 '''
-test_obtain_syllable
+obtain_syllable
 '''
 def test_obtain_syllable(current_letter_number=3, letter_number=4,
                          word_by_letters=list('объезд')):
@@ -21,7 +21,7 @@ def test_obtain_syllable(current_letter_number=4, letter_number=5,
 
 
 '''
-test_get_word_by_syllable
+get_word_by_syllable
 '''
 def test_get_word_by_syllable(word_incoming='бледность'):
     assert get_word_by_syllable(word_incoming) == ['блед', 'ность']
@@ -36,7 +36,7 @@ def test_get_word_by_syllable(word_incoming='а-яй'):
 
 
 '''
-test_obtain_syllable_parameters
+obtain_syllable_parameters
 '''
 def test_obtain_syllable_parameters(word_by_syllable=['ба', 'ка', 'лав', 'рский']):
     assert obtain_syllable_parameters(word_by_syllable) == [
