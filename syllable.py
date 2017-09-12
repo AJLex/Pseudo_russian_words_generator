@@ -28,7 +28,8 @@ word by syllable conditions:
 
 
 '''
-function gets syllable, return syllable like 'па'
+function gets word_by_lettersm, letter_number, current_letter_number
+return syllable like 'па'
 '''
 def obtain_syllable(letter_number, current_letter_number,
                     word_by_letters, third_condition=False):
@@ -67,7 +68,7 @@ function handles the last unprocessed letters, if any
 example: word_by_letters - ['б', 'л', 'е', 'д', 'н', 'о', 'с', 'т', 'ь', 'а', 'б']
 after execution of the main part word_by_syllable = ['блед', 'нос']
 letter_number = 7, len(word_by_letters) - 2 = 9
-last_letters_handler return ['блед', 'ность']
+return ['блед', 'ность']
 '''
 def last_letters_handler(letter_number, word_by_letters,
                          word_by_syllable_temp, vowel):
@@ -79,7 +80,7 @@ def last_letters_handler(letter_number, word_by_letters,
 '''
 function passes through each letter of the word
 checks the fulfillment of word by syllables conditions for decomposition incoming word
-if the condition is satisfied, then the syllable are constructed
+if the condition is satisfied, then syllable are constructed
 word_incoming = 'привет'
 return ['при', 'вет']
 '''
@@ -179,6 +180,10 @@ def reade_index_table_from_file(file_read):
     return syllable_list
 
 
+'''
+from counted_index_table function selects syllables according to the rules
+return pseudo-russian word 
+'''
 def pseudo_word_generator(counted_index_table=get_index_table()):
     print('\nВас приветствует генератор псевдо русских слов!')
     while True:
