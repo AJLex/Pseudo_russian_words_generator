@@ -9,7 +9,7 @@ basic variables:
                             inside function get_word_by_syllable
     letter_number - len of variable "word"
     word - sum of syllables
-    word_by_syllable_temp - list of syllables
+    word_by_syllables - list of syllables
     word_by_letters - incoming word divided by letters
     syllable_params - list, include:
                                    [0] - current syllable
@@ -27,124 +27,99 @@ word by syllable conditions:
 '''
 
 
-'''
-function gets word_by_lettersm, letter_number, current_letter_number
-return syllable like 'па'
-'''
+# function makes a syllable from letters
 def obtain_syllable(letter_number, current_letter_number,
                     word_by_letters, third_condition=False):
     syllable = ''
     sign = ['ь', 'ъ']
-    if third_condition == False:
-        for current_letter_number_temp in range(letter_number, current_letter_number + 1):
-            syllable += word_by_letters[current_letter_number_temp]
-        if word_by_letters[current_letter_number + 1] in sign:
-                syllable += word_by_letters[current_letter_number + 1]
-    else:
+    if third_condition:
         for current_letter_number_temp in range(letter_number, current_letter_number + 2):
             syllable += word_by_letters[current_letter_number_temp]
         if word_by_letters[current_letter_number + 2] in sign:
-                syllable += word_by_letters[current_letter_number + 2]
+            syllable += word_by_letters[current_letter_number + 2]
+    else:
+        for current_letter_number_temp in range(letter_number, current_letter_number + 1):
+            syllable += word_by_letters[current_letter_number_temp]
+            if word_by_letters[current_letter_number + 1] in sign:
+                syllable += word_by_letters[current_letter_number + 1]
     return syllable
 
 
-'''
-function return word_by_syllable with appended syllable
-example: ['при'] - incoming word_by_syllable, 'вет' - obtained syllable
-return ['при', 'вет']
-'''
+# functions records new syllable into container
 def record_of_syllable(letter_number, current_letter_number, word_by_letters,
-                       word, word_by_syllable_temp, third_condition=False):
+                       word, word_by_syllables, third_condition=False):
     syllable = obtain_syllable(letter_number, current_letter_number,
                                word_by_letters, third_condition)
     word += syllable
     letter_number = len(word)
-    word_by_syllable_temp.append(syllable)
-    return letter_number, current_letter_number, word_by_syllable_temp, word
+    word_by_syllables.append(syllable)
+    return letter_number, current_letter_number, word_by_syllables, word
 
 
-'''
-function handles the last unprocessed letters, if any
-example: word_by_letters - ['б', 'л', 'е', 'д', 'н', 'о', 'с', 'т', 'ь', 'а', 'б']
-after execution of the main part word_by_syllable = ['блед', 'нос']
-letter_number = 7, len(word_by_letters) - 2 = 9
-return ['блед', 'ность']
-'''
+# function handles last letters
 def last_letters_handler(letter_number, word_by_letters,
-                         word_by_syllable_temp, vowel):
+                         word_by_syllables, vowel):
     for current_letter_number in range(letter_number, len(word_by_letters) -2):
-            word_by_syllable_temp[-1] += word_by_letters[current_letter_number]
-    return word_by_syllable_temp
+            word_by_syllables[-1] += word_by_letters[current_letter_number]
+    return word_by_syllables
 
 
-'''
-function passes through each letter of the word
-checks the fulfillment of word by syllables conditions for decomposition incoming word
-if the condition is satisfied, then syllable are constructed
-word_incoming = 'привет'
-return ['при', 'вет']
-'''
-def get_word_by_syllable(word_incoming,word_by_syllable_temp=[],
+# function splits input word into syllables
+def get_word_by_syllable(word_incoming,word_by_syllables=[],
                          letter_number=0, word=''):
+    # this is needs for correct splits
     word_by_letters = list(word_incoming) + ['а', 'б']
     if '-' in word_by_letters:
         return None
     else:
-        vowel = ['а', 'у', 'о', 'ы', 'и', 'э', 'я', 'ю', 'ё', 'е']
+        vowels = ['а', 'у', 'о', 'ы', 'и', 'э', 'я', 'ю', 'ё', 'е']
         for current_letter_number in range(0, len(word_by_letters) - 2):
             if word_by_letters[current_letter_number] in vowel and \
                word_by_letters[current_letter_number + 1] in vowel:
-                letter_number, current_letter_number , word_by_syllable_temp, word = \
+                letter_number, current_letter_number , word_by_syllables, word = \
                 record_of_syllable(letter_number, current_letter_number, word_by_letters,
-                                      word, word_by_syllable_temp)
+                                      word, word_by_syllables)
 
             elif  word_by_letters[current_letter_number] in vowel and \
                   word_by_letters[current_letter_number + 1] not in vowel and \
                   word_by_letters[current_letter_number + 2] in vowel:
-                letter_number, current_letter_number , word_by_syllable_temp, word = \
+                letter_number, current_letter_number , word_by_syllables, word = \
                 record_of_syllable(letter_number, current_letter_number, word_by_letters,
-                                      word, word_by_syllable_temp)
+                                      word, word_by_syllables)
 
             elif word_by_letters[current_letter_number] in vowel and \
                  word_by_letters[current_letter_number + 1] not in vowel and \
                  word_by_letters[current_letter_number + 2] not in vowel:
-                letter_number, current_letter_number , word_by_syllable_temp, word = \
+                letter_number, current_letter_number , word_by_syllables, word = \
                 record_of_syllable(letter_number, current_letter_number, word_by_letters,
-                                      word, word_by_syllable_temp, third_condition=True)
-        word_by_syllable_temp = last_letters_handler(letter_number, word_by_letters,
-                                                     word_by_syllable_temp, vowel)
-        return word_by_syllable_temp
+                                      word, word_by_syllables, third_condition=True)
+        word_by_syllables = last_letters_handler(letter_number, word_by_letters,
+                                                     word_by_syllables, vowel)
+        return word_by_syllables
 
 
-'''
-function gets parametrs of syllable(see the top)
-word_by_syllable_temp = 'привет'
-return [('при', 'BEG', 0, 2), ('вет', 'при', 1, 2)]
-'''
-def obtain_syllable_parameters(word_by_syllable_temp):
+# function obtaining parametrs of syllable(see the top)
+# word_by_syllables = 'привет'
+# return [('при', 'BEG', 0, 2), ('вет', 'при', 1, 2)]
+def obtain_syllable_parameters(word_by_syllables):
     syllable_params = []
-    if word_by_syllable_temp:
-        for syllable in word_by_syllable_temp:
-            previous_syllable = word_by_syllable_temp[word_by_syllable_temp.index(syllable) - 1] \
-            if word_by_syllable_temp.index(syllable) > 0 else 'BEG'
+    if word_by_syllables:
+        for syllable in word_by_syllables:
+            previous_syllable = word_by_syllables[word_by_syllables.index(syllable) - 1] \
+            if word_by_syllables.index(syllable) > 0 else 'BEG'
             syllable_params.append((syllable, previous_syllable,
-                                   word_by_syllable_temp.index(syllable),
-                                   len(word_by_syllable_temp)))
+                                   word_by_syllables.index(syllable),
+                                   len(word_by_syllables)))
         return syllable_params
 
 
-'''
-function reads from csv dictionary words, then gets words by syllables,
-next step is obtain syllable_params for each syllables
-last step is count same syllables
-return counted_index_table
-'''
-def get_index_table(file_read='freqrnc2011.csv', ):
+# function reads words from dictionary and makes list of syllables
+def get_syllable_list(file_read):
     with open(file_read, 'r', encoding='utf-8') as f:
         syllable_list = []
         fields = ['word', 'PoS', 'Freq', 'R', 'D', 'Doc']
         reader = csv.DictReader(f, fields, delimiter='	')
-        print('loading...')
+        print('loading dictionary')
         for row in reader:
             try:
                 syllable_params = []
@@ -155,36 +130,22 @@ def get_index_table(file_read='freqrnc2011.csv', ):
                         syllable_list += syllable_params
             except IndexError:
                 nothing_to_do = True # exceptions occurs when no vowel in word
+    return syllable_list
+
+
+# function makes freq table of syllables
+def  get_index_table(syllable_list):
     raw_index_table = Counter(syllable_list)
     counted_idex_table = []
-    for key in raw_index_table:
-        temp = list(key)
-        temp.append(raw_index_table[key])
+    for syllable_params in raw_index_table:
+        temp = list(syllable_params)
+        temp.append(raw_index_table[syllable_params])
         counted_idex_table.append(temp)
     return counted_idex_table
 
 
-def write_index_table_to_file(count, file_write):
-    with open(file_write, 'w', encoding='utf-8') as f:
-        for key in count:
-            temp = list(key)
-            temp.append(count[key])
-            f.write(str(temp).strip('[').strip(']') + '\n')
-
-
-def reade_index_table_from_file(file_read):
-    syllable_list = []
-    with open(file_read, 'r', encoding='utf-8') as f:
-        for line in f:
-            syllable_list.append(f.readline)
-    return syllable_list
-
-
-'''
-from counted_index_table function selects syllables according to the rules
-return pseudo-russian word 
-'''
-def pseudo_word_generator(counted_index_table=get_index_table()):
+# function is generate pseudo-russian words
+def pseudo_word_generator(counted_index_table):
     print('\nВас приветствует генератор псевдо русских слов!')
     while True:
         pseudo_word = ''
@@ -213,11 +174,5 @@ def pseudo_word_generator(counted_index_table=get_index_table()):
         print(pseudo_word)
 
 
-if __name__ == '__main__':
-    """
-    Firt of all needs to create and turn on virtual envirement, then execute pip install -r requirements.
-    For running app needs to download dictionary from link http://dict.ruslang.ru/Freq2011.zip
-    and put it into folder with this program.
-    """
-
-    pseudo_word_generator()
+if __name__ == '__main__':    
+    pseudo_word_generator(get_index_table(get_syllable_list('freqrnc2011.csv')))
