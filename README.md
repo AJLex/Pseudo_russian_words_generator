@@ -1,6 +1,6 @@
 ### Pseudo-russian words generator
 
-Applications makes a Pseudo-russian words like захлюбить, воркомат and others.
+Application makes a Pseudo-russian words like захлюбить, воркомат and others.
 
 ### Getting Started
 For running app needs to download program from app and download dictionary from [link](http://dict.ruslang.ru/Freq2011.zip) and put it into folder with this program.
